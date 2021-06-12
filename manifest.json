@@ -1,0 +1,20 @@
+{
+	"manifest_version": 2,
+	"name": "Tab Sharer",
+	"version": "1.0.0",
+	"description": "Easily share tabs between your browsers",
+	"icons": {
+		"48": "img/icon-48.png"
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"permissions": [
+		"contextMenus",
+		"storage"
+	],
+	"options_ui": {
+		"page": "options_ui/options.html",
+		"browser_style": true
+	}
+}
