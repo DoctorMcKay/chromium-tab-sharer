@@ -1,10 +1,11 @@
-const DEBUG = true; // controls logging
+let DEBUG = false; // controls logging; use let instead of const so we can toggle it later in the background page inspector
 
 let g_DeviceList = {};
 let g_MyDeviceId = null;
 
-// let isEdge = navigator.userAgentData.brands.some(b => b.brand == 'Microsoft Edge');
-
+// For some reason, the chrome type definitions think that chrome.contextMenus.create returns void. In fact it returns
+// a menu item ID, which is used later to add submenu items.
+// noinspection JSVoidFunctionReturnValueUsed
 let g_RootContextMenuItemId = chrome.contextMenus.create({
 	contexts: ['all'],
 	documentUrlPatterns: ['http://*/*', 'https://*/*'],
@@ -12,7 +13,7 @@ let g_RootContextMenuItemId = chrome.contextMenus.create({
 });
 let g_SubContextMenuIds = [];
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener((changes, namespace) => {
 	log('namespace changed: ' + namespace);
 	log(changes);
 	
@@ -52,7 +53,10 @@ chrome.storage.local.get(['deviceID'], (result) => {
 		}
 		
 		log(`Generated new device ID ${g_MyDeviceId}`);
-		chrome.storage.local.set({deviceID: g_MyDeviceId});
+		chrome.storage.local.set({deviceID: g_MyDeviceId}, function() {
+			// First run? Open options page so the user can set the device name.
+			chrome.runtime.openOptionsPage();
+		});
 	}
 	
 	heartbeat();
@@ -99,6 +103,7 @@ function updateDeviceListContextMenu() {
 		
 		devices.sort((a, b) => a.name < b.name ? -1 : 1);
 		devices.forEach((device) => {
+			// noinspection JSVoidFunctionReturnValueUsed
 			g_SubContextMenuIds.push(chrome.contextMenus.create({
 				contexts: ['all'],
 				parentId: g_RootContextMenuItemId,
@@ -110,6 +115,7 @@ function updateDeviceListContextMenu() {
 		});
 		
 		if (devices.length == 0) {
+			// noinspection JSVoidFunctionReturnValueUsed
 			g_SubContextMenuIds.push(chrome.contextMenus.create({
 				contexts: ['all'],
 				parentId: g_RootContextMenuItemId,
@@ -118,7 +124,9 @@ function updateDeviceListContextMenu() {
 			}));
 		}
 		
+		// noinspection JSVoidFunctionReturnValueUsed
 		g_SubContextMenuIds.push(chrome.contextMenus.create({contexts: ['all'], parentId: g_RootContextMenuItemId, type: 'separator'}));
+		// noinspection JSVoidFunctionReturnValueUsed
 		g_SubContextMenuIds.push(chrome.contextMenus.create({
 			contexts: ['all'],
 			parentId: g_RootContextMenuItemId,

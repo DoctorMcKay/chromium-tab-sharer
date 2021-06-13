@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Tab Sharer Options</title>
-	<link rel="stylesheet" href="options.css" />
-	<script src="options.js" defer></script>
-</head>
-<body>
-	TODO
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<title>Tab Sharer Options</title>
+		<link rel="stylesheet" href="options.css" />
+		<script src="options.js" defer></script>
+	</head>
+	<body>
+		<div id="welcome-message">
+			<p>
+				<b>Welcome to Tab Sharer!</b> You'll probably want to go ahead and configure this device's name below.
+			</p>
+			<p>
+				Once you install Tab Sharer on other <span class="browser-name"></span> browsers signed into the same
+				<span class="browser-vendor"></span> account, they will automatically appear below and in the share menu
+				(right-click on any page, then use "Send page to device").
+			</p>
+		</div>
+		<div id="login-notice">
+			<p>
+				<b>You MUST be logged into a <span class="browser-vendor"></span> account to use Tab Sharer!</b><br>
+				If you aren't logged in, then no devices will appear in the share menu.
+			</p>
+			<p>
+				Due to technical limitations, it's not possible for Tab Sharer to automatically detect and notify you if
+				you aren't logged into a <span class="browser-vendor"></span> account, so make sure that you are.
+			</p>
+		</div>
+		<div class="this-device">
+			<h4>This Device</h4>
+
+			<div class="form-field">
+				<label for="this-device-name">Device Name</label>
+				<input type="text" id="this-device-name" />
+			</div>
+
+			<div id="this-device-saved-notice">Changes saved</div>
+		</div>
+		<div class="other-devices">
+			<h4>Other Registered Devices</h4>
+			<div id="other-devices-list"></div>
+			<p id="device-deleted-confirm">
+				<b>Device deleted.</b> If the device still has Tab Sharer installed and is still logged into your
+				<span class="browser-vendor"></span> account, it will automatically re-register itself the next time
+				<span class="browser-name"></span> is launched.
+			</p>
+		</div>
+	</body>
 </html>
