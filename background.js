@@ -25,17 +25,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 		}
 		
 		// Find tabs that were shared to us
-		let sharedTabsKeys = keys.filter(key => key.startsWith(`sharedtab_${g_MyDeviceId}_`) && changes[key].newValue);
-		sharedTabsKeys.forEach((key) => {
-			chrome.tabs.create({
-				active: false,
-				url: changes[key].newValue.url
-			});
-		});
-		
-		if (sharedTabsKeys.length > 0) {
-			chrome.storage.sync.remove(sharedTabsKeys);
-		}
+		checkNewSharedTabs();
 	}
 });
 
@@ -60,6 +50,7 @@ chrome.storage.local.get(['deviceID'], (result) => {
 	}
 	
 	heartbeat();
+	checkNewSharedTabs();
 	setInterval(heartbeat, 1000 * 60 * 60); // heartbeat every hour
 });
 
@@ -73,6 +64,22 @@ function heartbeat() {
 	
 	let heartbeatKey = `device_${g_MyDeviceId}_heartbeat`;
 	chrome.storage.sync.set({[heartbeatKey]: Date.now()});
+}
+
+function checkNewSharedTabs() {
+	chrome.storage.sync.get(null, (result) => {
+		let sharedTabsKeys = Object.keys(result).filter(key => key.startsWith(`sharedtab_${g_MyDeviceId}_`));
+		sharedTabsKeys.forEach((key) => {
+			chrome.tabs.create({
+				active: false,
+				url: result[key].url
+			});
+		});
+		
+		if (sharedTabsKeys.length > 0) {
+			chrome.storage.sync.remove(sharedTabsKeys);
+		}
+	});
 }
 
 function updateDeviceListContextMenu() {
