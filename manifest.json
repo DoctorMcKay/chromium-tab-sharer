@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Tab Sharer",
 	"version": "1.0.0",
-	"description": "Easily share tabs between your browsers",
+	"description": "Easily share tabs between your own devices",
 	"icons": {
 		"48": "img/icon-48.png"
 	},
